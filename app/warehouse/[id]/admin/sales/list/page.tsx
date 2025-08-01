@@ -85,7 +85,7 @@ export default function SalesListPage() {
     router.push(`${endpoint}/sales/${saleId}`)
   }
 
-  const handlePrintReceipt = (id:string,paperWidth: "57mm" | "80mm") => {
+  const handlePrintReceipt = (id:string,paperWidth: "57mm" | "80mm" | "A4") => {
 
     const completedSale = salesData.find((x:any)=>x.id == id)
         if (!completedSale) return
@@ -349,8 +349,9 @@ export default function SalesListPage() {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => handlePrintReceipt(sale.id,"57mm")}>Print 57mm (2¼")</DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => handlePrintReceipt(sale.id,"80mm")}>Print 80mm (3⅛")</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handlePrintReceipt(sale.id,"57mm")}>Print 57mm (2¼")</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handlePrintReceipt(sale.id,"80mm")}>Print 80mm (3⅛")</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handlePrintReceipt(sale.id,"A4")}>Print A4 (Full Page)</DropdownMenuItem>
                                 </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>

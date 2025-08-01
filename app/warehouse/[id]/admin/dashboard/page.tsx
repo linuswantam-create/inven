@@ -45,6 +45,8 @@ import Link from "next/link"
 import fetchWareHouseData from "@/hooks/fetch-invidual-data"
 import { useSession } from "next-auth/react"
 import { formatCurrency } from "@/lib/utils"
+import { SalesCalendar } from "@/components/sales-calendar"
+import { DailySalesModal } from "@/components/daily-sales-modal"
 
 interface DashboardData {
   warehouse: {
@@ -105,6 +107,8 @@ interface DashboardData {
 
 export default function DashboardPage() {
   const [endPoint, setEndPoint] = useState("")
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [showDailyModal, setShowDailyModal] = useState(false)
   const {data:session} = useSession()
   
   
@@ -113,6 +117,17 @@ export default function DashboardPage() {
 
 
   const {data:dashboardData,loading,error} = fetchWareHouseData("/api/warehouse/dashboard",{warehouseId})
+  
+  const handleDateClick = (date: string) => {
+    setSelectedDate(date)
+    setShowDailyModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowDailyModal(false)
+    setSelectedDate(null)
+  }
+  
   useEffect(()=>{
     setEndPoint(`/warehouse/${warehouseId}/${session?.user?.role}`)
   },[session,warehouseId])
@@ -434,6 +449,16 @@ export default function DashboardPage() {
             )}
           </div>
 
+          {/* Daily Sales Calendar */}
+          <div className="grid gap-6">
+            <SalesCalendar
+              warehouseId={warehouseId}
+              onDateClick={handleDateClick}
+              apiEndpoint="/api/sale/daily-analytics"
+              className="w-full"
+            />
+          </div>
+
           {/* Data Tables */}
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Recent Sales */}
@@ -580,6 +605,16 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Daily Sales Modal */}
+        <DailySalesModal
+          isOpen={showDailyModal}
+          onClose={handleCloseModal}
+          date={selectedDate}
+          warehouseId={warehouseId}
+          warehouseName={dashboardData?.warehouse?.name || "Warehouse"}
+          apiEndpoint="/api/sale/daily-analytics"
+        />
       </>
   )
 }

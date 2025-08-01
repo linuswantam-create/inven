@@ -79,7 +79,7 @@ const defaultReceiptSettings = {
   showBalance: true,
 
   // Format Settings
-  paperSize: "80mm", // 57mm, 80mm
+  paperSize: "80mm", // 57mm, 80mm, A4
   fontSize: "normal", // small, normal, large
   printDensity: "normal", // light, normal, dark
   lineSpacing: "normal", // compact, normal, wide
@@ -671,6 +671,7 @@ export default function ReceiptSettingsPage() {
                           <SelectContent>
                             <SelectItem value="57mm">57mm (Small)</SelectItem>
                             <SelectItem value="80mm">80mm (Standard)</SelectItem>
+                            <SelectItem value="A4">A4 (Full Page)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

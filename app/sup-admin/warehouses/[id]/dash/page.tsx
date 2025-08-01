@@ -82,6 +82,8 @@ import fetchData from "@/hooks/fetch-data"
 import { formatCurrency } from "@/lib/utils"
 import fetchWareHouseData from "@/hooks/fetch-invidual-data"
 import Link from "next/link"
+import { SalesCalendar } from "@/components/sales-calendar"
+import { DailySalesModal } from "@/components/daily-sales-modal"
 
 // Color palette for charts
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -92,6 +94,8 @@ export default function WarehouseDetailsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState("12months")
   const [detailedAnalytics, setDetailedAnalytics] = useState<any>(null)
   const [isLoadingAnalytics, setIsLoadingAnalytics] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const [showDailyModal, setShowDailyModal] = useState(false)
   const wareHouseId = path?.split("/")[3]
   
   // Fetch warehouse data using the ID from params
@@ -125,6 +129,16 @@ export default function WarehouseDetailsPage() {
 
     fetchDetailedAnalytics()
   }, [wareHouseId])
+
+  const handleDateClick = (date: string) => {
+    setSelectedDate(date)
+    setShowDailyModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowDailyModal(false)
+    setSelectedDate(null)
+  }
 
   // Loading state
   if (loading) {
@@ -366,8 +380,9 @@ export default function WarehouseDetailsPage() {
           </Card>
 
           <Tabs defaultValue="analytics" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
               <TabsTrigger value="products">Products</TabsTrigger>
               <TabsTrigger value="sales">Sales</TabsTrigger>
               <TabsTrigger value="customers">Customers</TabsTrigger>
@@ -483,6 +498,24 @@ export default function WarehouseDetailsPage() {
                   <p className="text-muted-foreground">No analytics data available</p>
                 </div>
               )}
+            </TabsContent>
+
+            <TabsContent value="calendar" className="space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold">Daily Sales Calendar</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Click on any date to view detailed sales information and export data
+                  </p>
+                </div>
+                
+                <SalesCalendar
+                  warehouseId={wareHouseId}
+                  onDateClick={handleDateClick}
+                  apiEndpoint="/api/sale/daily-analytics-online"
+                  className="w-full"
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="products" className="space-y-4">
@@ -865,6 +898,16 @@ export default function WarehouseDetailsPage() {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* Daily Sales Modal */}
+        <DailySalesModal
+          isOpen={showDailyModal}
+          onClose={handleCloseModal}
+          date={selectedDate}
+          warehouseId={wareHouseId}
+          warehouseName={warehouseData?.name || "Warehouse"}
+          apiEndpoint="/api/sale/daily-analytics-online"
+        />
      </>
   )
 }
