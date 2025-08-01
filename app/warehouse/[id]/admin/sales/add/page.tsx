@@ -419,7 +419,7 @@ export default function AddSalePage() {
     }
   }
 
-  const handlePrintReceipt = (paperWidth: "57mm" | "80mm") => {
+  const handlePrintReceipt = (paperWidth: "57mm" | "80mm" | "A4") => {
     if (!completedSale) return
 
     const receiptData = {
@@ -995,6 +995,7 @@ export default function AddSalePage() {
                   <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handlePrintReceipt("57mm")}>Print 57mm (2¼")</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handlePrintReceipt("80mm")}>Print 80mm (3⅛")</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handlePrintReceipt("A4")}>Print A4 (Full Page)</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

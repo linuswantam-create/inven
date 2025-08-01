@@ -87,7 +87,7 @@ interface ReceiptSettings {
 export function usePrintReceipt() {
   const warehousesId = getWareHouseId()
 
-  const printReceipt = useCallback(async (data: ReceiptData, paperWidth?: "57mm" | "80mm") => {
+  const printReceipt = useCallback(async (data: ReceiptData, paperWidth?: "57mm" | "80mm" | "A4") => {
     const printWindow = window.open("", "_blank")
     if (!printWindow) return
 
@@ -151,20 +151,20 @@ export function usePrintReceipt() {
 
       // Use paper size from settings or fallback to parameter
       const effectivePaperWidth = paperWidth || settings.paperSize || "80mm"
-      const width = effectivePaperWidth === "57mm" ? "57mm" : "80mm"
+      const width = effectivePaperWidth === "57mm" ? "57mm" : effectivePaperWidth === "A4" ? "210mm" : "80mm"
       
       // Font size based on settings
       let fontSize = "12px"
       let lineHeight = "14px"
       if (settings.fontSize === "small") {
-        fontSize = effectivePaperWidth === "57mm" ? "9px" : "10px"
-        lineHeight = effectivePaperWidth === "57mm" ? "11px" : "12px"
+        fontSize = effectivePaperWidth === "57mm" ? "9px" : effectivePaperWidth === "A4" ? "12px" : "10px"
+        lineHeight = effectivePaperWidth === "57mm" ? "11px" : effectivePaperWidth === "A4" ? "14px" : "12px"
       } else if (settings.fontSize === "large") {
-        fontSize = effectivePaperWidth === "57mm" ? "11px" : "14px"
-        lineHeight = effectivePaperWidth === "57mm" ? "13px" : "16px"
+        fontSize = effectivePaperWidth === "57mm" ? "11px" : effectivePaperWidth === "A4" ? "18px" : "14px"
+        lineHeight = effectivePaperWidth === "57mm" ? "13px" : effectivePaperWidth === "A4" ? "22px" : "16px"
       } else {
-        fontSize = effectivePaperWidth === "57mm" ? "10px" : "12px"
-        lineHeight = effectivePaperWidth === "57mm" ? "12px" : "14px"
+        fontSize = effectivePaperWidth === "57mm" ? "10px" : effectivePaperWidth === "A4" ? "14px" : "12px"
+        lineHeight = effectivePaperWidth === "57mm" ? "12px" : effectivePaperWidth === "A4" ? "18px" : "14px"
       }
 
       // Line spacing adjustments
@@ -269,16 +269,16 @@ export function usePrintReceipt() {
               }
               .company-name {
                 font-weight: bold;
-                font-size: ${effectivePaperWidth === "57mm" ? "12px" : "16px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "12px" : effectivePaperWidth === "A4" ? "24px" : "16px"};
                 color: ${settings.primaryColor};
               }
               .business-name {
-                font-size: ${effectivePaperWidth === "57mm" ? "9px" : "11px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "9px" : effectivePaperWidth === "A4" ? "16px" : "11px"};
                 color: ${settings.accentColor};
                 margin-top: 2px;
               }
               .header-message {
-                font-size: ${effectivePaperWidth === "57mm" ? "8px" : "10px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "8px" : effectivePaperWidth === "A4" ? "14px" : "10px"};
                 color: ${settings.accentColor};
                 margin: 8px 0;
                 padding: 4px 0;
@@ -287,7 +287,7 @@ export function usePrintReceipt() {
               }
               .receipt-title {
                 font-weight: bold;
-                font-size: ${effectivePaperWidth === "57mm" ? "11px" : "13px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "11px" : effectivePaperWidth === "A4" ? "20px" : "13px"};
                 text-align: center;
                 margin: 8px 0;
                 padding-bottom: 4px;
@@ -310,7 +310,7 @@ export function usePrintReceipt() {
               .item-details {
                 display: flex;
                 justify-content: space-between;
-                font-size: ${effectivePaperWidth === "57mm" ? "9px" : "10px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "9px" : effectivePaperWidth === "A4" ? "14px" : "10px"};
               }
               .totals {
                 border-top: 1px dashed ${settings.primaryColor};
@@ -338,11 +338,11 @@ export function usePrintReceipt() {
                 margin-top: 16px;
                 padding-top: 8px;
                 border-top: 1px dashed ${settings.primaryColor};
-                font-size: ${effectivePaperWidth === "57mm" ? "8px" : "9px"};
+                font-size: ${effectivePaperWidth === "57mm" ? "8px" : effectivePaperWidth === "A4" ? "12px" : "9px"};
                 color: ${settings.accentColor};
               }
               .logo {
-                max-height: ${effectivePaperWidth === "57mm" ? "24px" : "32px"};
+                max-height: ${effectivePaperWidth === "57mm" ? "24px" : effectivePaperWidth === "A4" ? "64px" : "32px"};
                 max-width: 100%;
                 margin-bottom: 8px;
               }
@@ -361,7 +361,7 @@ export function usePrintReceipt() {
               ` : ""}
               <div class="company-name">${settings.companyName}</div>
               ${settings.businessName ? `<div class="business-name">${settings.businessName}</div>` : ""}
-              <div style="font-size: ${effectivePaperWidth === "57mm" ? "8px" : "9px"}; margin-top: 4px;">
+              <div style="font-size: ${effectivePaperWidth === "57mm" ? "8px" : effectivePaperWidth === "A4" ? "12px" : "9px"}; margin-top: 4px;">
                 <div>${settings.address}</div>
                 <div>${settings.city}, ${settings.state} ${settings.country}</div>
                 ${settings.phone ? `<div>Phone: ${settings.phone}</div>` : ""}
